@@ -44,7 +44,7 @@ if (isset($_POST['btnCreate'])) {
     <div class="card mt-4 shadow-sm">
         <div class="card-header">
             <h4 class="mb-0">Add Member
-                <a href="members.php" class="btn btn-primary float-end">Back</a>
+                <a href="./list-members.php" class="btn btn-primary float-end">Back</a>
             </h4>
         </div>
 

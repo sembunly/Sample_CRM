@@ -2,7 +2,21 @@
 include('includes/header.php');
 include_once "../conn.php";
 
-$sql = mysqli_query($conn, "SELECT * FROM members ORDER BY id ASC");
+$search = "";
+
+if (isset($_GET['search'])) {
+    $search = mysqli_real_escape_string($conn, $_GET['search']);
+    $sql = mysqli_query($conn, "
+        SELECT * FROM members
+        WHERE first_name LIKE '%$search%'
+        OR last_name LIKE '%$search%'
+        OR phone LIKE '%$search%'
+        OR email LIKE '%$search%'
+        ORDER BY id ASC
+    ");
+} else {
+    $sql = mysqli_query($conn, "SELECT * FROM members ORDER BY id ASC");
+}
 ?>
 
 <div class="container-fluid px-4">
@@ -13,11 +27,20 @@ $sql = mysqli_query($conn, "SELECT * FROM members ORDER BY id ASC");
 
         <div class="card-body">
 
+            <form method="GET" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control"
+                           placeholder="Search name, phone, email..."
+                           value="<?= htmlspecialchars($search); ?>">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                    <a href="list-members.php" class="btn btn-secondary">Clear</a>
+                </div>
+            </form>
+
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <!--<th>No.</th>-->
                             <th>First name</th>
                             <th>Last name</th>
                             <th>Gender</th>
@@ -34,7 +57,6 @@ $sql = mysqli_query($conn, "SELECT * FROM members ORDER BY id ASC");
                     <?php if (mysqli_num_rows($sql) > 0): ?>
                         <?php while ($rw = mysqli_fetch_assoc($sql)): ?>
                             <tr>
-                                <!--<td><?= $i++ ?></td>-->
                                 <td><?= $rw['first_name']; ?></td>
                                 <td><?= $rw['last_name']; ?></td>
                                 <td><?= $rw['gender']; ?></td>

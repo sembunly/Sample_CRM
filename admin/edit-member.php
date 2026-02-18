@@ -64,7 +64,7 @@ if (isset($_POST['update'])) {
     <div class="card mt-4 shadow-sm">
         <div class="card-header">
             <h4 class="mb-0">Edit Member
-                <a href="?tag=listmember" class="btn btn-danger float-end">Back</a>
+                <a href="./list-members.php" class="btn btn-danger float-end">Back</a>
             </h4>
         </div>
 

@@ -1,4 +1,4 @@
-<?php include('includes/header.php'); ?>
+
 <?php
 session_start();
 if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
@@ -71,5 +71,3 @@ body {
         <div class="text-danger mt-3"><?= $msg ?></div>
     <?php endif; ?>
 </div>
-
-<?php include('includes/footer.php'); ?>

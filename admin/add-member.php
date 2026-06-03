@@ -25,7 +25,7 @@ if (isset($_POST['btnCreate'])) {
         $msg = "<div class='alert alert-danger'>Email already exists!</div>";
     } else {
         // Insert member
-        $sql = "INSERT INTO members 
+        $sql = "INSERT INTO members
             (first_name, last_name, gender, dob, phone, email, address, join_date)
             VALUES ('$first', '$last', '$gender', '$dob', '$phone', '$email', '$address', '$join_date')";
         

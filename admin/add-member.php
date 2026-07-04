@@ -16,8 +16,8 @@ if (isset($_POST['btnCreate'])) {
     $join_date = mysqli_real_escape_string($conn, $_POST['join_date']);
 
     // Check for duplicates
-    $checkPhone = mysqli_query($conn, "SELECT id FROM members WHERE phone='$phone'");
-    $checkEmail = mysqli_query($conn, "SELECT id FROM members WHERE email='$email'");
+    $checkPhone = mysqli_query($conn, "SELECT id FROM members WHERE phone='$phone' AND status = 1");
+    $checkEmail = mysqli_query($conn, "SELECT id FROM members WHERE email='$email' AND status = 1");
 
     if (mysqli_num_rows($checkPhone) > 0) {
         $msg = "<div class='alert alert-danger'>Phone number already exists!</div>";
@@ -26,8 +26,8 @@ if (isset($_POST['btnCreate'])) {
     } else {
         // Insert member
         $sql = "INSERT INTO members
-            (first_name, last_name, gender, dob, phone, email, address, join_date)
-            VALUES ('$first', '$last', '$gender', '$dob', '$phone', '$email', '$address', '$join_date')";
+            (first_name, last_name, gender, dob, phone, email, address, join_date, status)
+            VALUES ('$first', '$last', '$gender', '$dob', '$phone', '$email', '$address', '$join_date', 1)";
         
         $exec = mysqli_query($conn, $sql);
 

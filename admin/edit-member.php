@@ -9,7 +9,7 @@ if (!isset($_GET['id'])) {
 }
 
 $id = intval($_GET['id']);
-$query = mysqli_query($conn, "SELECT * FROM members WHERE id = $id");
+$query = mysqli_query($conn, "SELECT * FROM members WHERE id = $id AND status = 1");
 
 if (mysqli_num_rows($query) == 0) {
     echo "<h4>No Such Member Found</h4>";
@@ -31,29 +31,29 @@ if (isset($_POST['update'])) {
     $join_date = mysqli_real_escape_string($conn, $_POST['join_date']);
 
     // Optional: Check duplicate phone/email except current member
-    $checkPhone = mysqli_query($conn, "SELECT id FROM members WHERE phone='$phone' AND id != $id");
-    $checkEmail = mysqli_query($conn, "SELECT id FROM members WHERE email='$email' AND id != $id");
+    $checkPhone = mysqli_query($conn, "SELECT id FROM members WHERE phone='$phone' AND id != $id AND status = 1");
+    $checkEmail = mysqli_query($conn, "SELECT id FROM members WHERE email='$email' AND id != $id AND status = 1");
 
     if (mysqli_num_rows($checkPhone) > 0) {
         $msg = "<div class='alert alert-danger'>Phone number already exists!</div>";
     } elseif (mysqli_num_rows($checkEmail) > 0) {
         $msg = "<div class='alert alert-danger'>Email already exists!</div>";
     } else {
-        $update = mysqli_query($conn, "UPDATE members SET
-            first_name='$first',
-            last_name='$last',
-            gender='$gender',
-            dob='$dob',
-            phone='$phone',
-            email='$email',
-            address='$address',
-            join_date='$join_date'
-            WHERE id=$id
+        mysqli_begin_transaction($conn);
+
+        $archive = mysqli_query($conn, "UPDATE members SET status = 2 WHERE id = $id AND status = 1");
+
+        $insert = mysqli_query($conn, "INSERT INTO members
+            (first_name, last_name, gender, dob, phone, email, address, join_date, status)
+            VALUES ('$first', '$last', '$gender', '$dob', '$phone', '$email', '$address', '$join_date', 1)
         ");
 
-        if ($update) {
-            $msg = "<div class='alert alert-success'>Member updated successfully!</div>";
+        if ($archive && $insert) {
+            mysqli_commit($conn);
+            header("Location: list-members.php");
+            exit;
         } else {
+            mysqli_rollback($conn);
             $msg = "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
         }
     }

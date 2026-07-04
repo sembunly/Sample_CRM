@@ -8,14 +8,17 @@ if (isset($_GET['search'])) {
     $search = mysqli_real_escape_string($conn, $_GET['search']);
     $sql = mysqli_query($conn, "
         SELECT * FROM members
-        WHERE first_name LIKE '%$search%'
-        OR last_name LIKE '%$search%'
-        OR phone LIKE '%$search%'
-        OR email LIKE '%$search%'
+        WHERE status = 1
+        AND (
+            first_name LIKE '%$search%'
+            OR last_name LIKE '%$search%'
+            OR phone LIKE '%$search%'
+            OR email LIKE '%$search%'
+        )
         ORDER BY id ASC
     ");
 } else {
-    $sql = mysqli_query($conn, "SELECT * FROM members ORDER BY id ASC");
+    $sql = mysqli_query($conn, "SELECT * FROM members WHERE status = 1 ORDER BY id ASC");
 }
 ?>
 
